@@ -50,6 +50,7 @@ class ShapeTests {
 	}
 	
 	@Test
+	@Disabled
 	void SquareRightTriangleTest() {
 		SquareRightTriangle triangleRight = new SquareRightTriangle(10);
 		assertEquals(10, triangleRight.getWidth());
@@ -57,6 +58,7 @@ class ShapeTests {
 		displayStrings(triangleRight.presentation(20));
 	}
 	@Test
+	@Disabled
 	void SquareLeftTriangleTest() {
 		SquareLeftTriangle triangleLeft = new SquareLeftTriangle(10);
 		assertEquals(10, triangleLeft.getWidth());
@@ -68,6 +70,17 @@ class ShapeTests {
 		for(String str: strings) {
 			System.out.println(str);
 		}
+	}
+	
+	@Test
+	void SquareBreakRulesTest() {
+		Square square = new Square(10);
+		 square.setHeight(5);
+		 displayStrings(square.presentation(10));
+		 System.out.println();
+		 
+		 square.setWidth(15);
+		 displayStrings(square.presentation(10));
 	}
 
 }
