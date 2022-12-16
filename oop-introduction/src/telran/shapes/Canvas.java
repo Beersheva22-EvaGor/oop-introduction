@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Canvas extends Shape {
 	private Shape[] shapes;
-	private Directions direction = Directions.ROW;
+	private static Directions direction = Directions.ROW;
 	private int margin = 5;
 
 	public Canvas(int width, int height, Shape[] shapes) {
@@ -45,18 +45,21 @@ public class Canvas extends Shape {
 	private String[] colPresentation(String[] source, Shape shape, int offset) {
 		shape.setWidth(this.getWidth()); // this could be commented if there wasn't condition
 											// all shapes have the same width in vertical representation
-		String[] res = Arrays.copyOf(source, source.length + shape.getHeight() + margin);
-		System.arraycopy(shape.presentation(offset), 0, res, source.length, shape.presentation(offset).length);
+		
+		var present = shape.presentation(offset);
+		String[] res = Arrays.copyOf(source, source.length + present.length + margin);
+		System.arraycopy(shape.presentation(offset), 0, res, source.length, present.length);
 
 		// add margin - margin here is a count of empty strings between shapes
 		String[] marginArray = new String[margin];
 		Arrays.fill(marginArray, "");
-		System.arraycopy(marginArray, 0, res, source.length + shape.getHeight(), margin);
+		System.arraycopy(marginArray, 0, res, source.length + present.length, margin);
 		return res;
 	}
 
-	public void setDirection(Directions direction) {
-		this.direction = direction;
+	public void setDirection(Directions direction1) {
+		direction = direction1;
+		
 	}
 
 	public void setMargin(int margin) {

@@ -17,7 +17,33 @@ import telran.shapes.SquareRightTriangle;
 import telran.shapes.SquareTriangle;
 
 class ShapeTests {
+	
+	Canvas canvas = new Canvas(10, 20,
+			new Shape[] { new Rectangle(10, 3), new Square(10), new SquareLeftTriangle(10) });
+	Shape[] shapes = { new Rectangle(10, 3), new Square(10), new SquareLeftTriangle(10), new SquareRightTriangle(10),
+			canvas, new Square(10) };
+	
+	@Test
+	@Disabled
+	void canvasInRowTest() {
+		Canvas canvas = new Canvas(10, 4, shapes);
+		canvas.setMargin(3);
+		canvas.setDirection(Directions.ROW);
+		displayStrings(canvas.presentation(2));
 
+	}
+
+	@Test
+	//@Disabled
+	void canvasInColumnTest() {
+		Canvas canvas = new Canvas(10, 4, shapes);
+		canvas.setDirection(Directions.COLUMN);
+		this.canvas.setDirection(Directions.ROW);
+		canvas.setMargin(1);
+		displayStrings(canvas.presentation(2));
+
+	}
+	
 	@Test
 	@Disabled
 	void rectangleTest() {
@@ -64,6 +90,7 @@ class ShapeTests {
 	}
 
 	@Test
+	@Disabled
 	void CanvasTest() {
 		Rectangle rect = new Rectangle(3, 5);
 		SquareRightTriangle triangleRight = new SquareRightTriangle(10);
