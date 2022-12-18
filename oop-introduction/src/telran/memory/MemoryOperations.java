@@ -2,7 +2,7 @@ package telran.memory;
 
 public class MemoryOperations {
 
-	public static int getMaxAvailableMemory() {
+	public static int getMaxAvailableMemory() {		
 		int res = Integer.MAX_VALUE;
 		byte ar[];
 		int left = 0, right = res;
@@ -15,9 +15,9 @@ public class MemoryOperations {
 			} catch (Throwable e) {
 				right = middle - 1;
 			}
-			middle = (left + right) / 2;
+			middle = left/2 + right/ 2;
 		}
-
+		
 		return middle;
 	}
 	
