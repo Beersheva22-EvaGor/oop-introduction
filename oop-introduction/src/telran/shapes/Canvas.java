@@ -5,149 +5,79 @@ import java.util.Arrays;
 public class Canvas extends Shape {
 	private Shape[] shapes;
 	private Directions direction = Directions.ROW;
-	private static Directions directionOrig;
 	private int margin = 5;
-
-	private static int[] snapshot;
 
 	public Canvas(int width, int height, Shape[] shapes) {
 		super(width, height);
 		this.shapes = shapes;
 	}
+	@Override
+	public int getHeight() {
+		return direction.equals(Directions.ROW) ? super.getHeight() : (heightsSum() + margin * (shapes.length - 1));
+	}
 
 	@Override
 	public String[] presentation(int offset) {
-		String[] res = new String[0];
-		directionOrig = direction;
-		storeNestesDirections(shapes); // store snapshots of all nested directions
+		
+		return direction.equals(Directions.ROW) ? presentationInRow(offset) : presentationInColumn(offset);
+	}
 
-		setNestedDirection(shapes); // changes all nested directions to the parent's one
+	private String[] presentationInColumn(int offset) {
+		String res[] = new String[heightsSum() + (shapes.length - 1) * margin];
+		Arrays.fill(res, " ".repeat(getWidth()));
+		int length = mergeLines(0, res, getPresentation(0, offset));
+		for(int i = 1; i < shapes.length; i++) {
+			length = mergeLines(length + margin, res, getPresentation(i, offset));
+		}
+		return res;
+	}
 
-		if (direction == Directions.COLUMN) {
-				res = colPresentation(res,  offset);
+	private int heightsSum() {
+		int sum = 0;
+		for(Shape shape: shapes) {
+			sum += shape.getHeight();
+		}
+		return sum;
+	}
+
+	private int mergeLines(int length, String[] res, String[] shapePresentation) {
+		System.arraycopy(shapePresentation, 0, res, length, shapePresentation.length);
+		return length + shapePresentation.length;
+	}
+
+	private String[] presentationInRow(int offset) {
+		String[] res = getPresentation(0, offset);
+		for(int i = 1; i < shapes.length; i++) {
+			res = join(res, getPresentation(i, margin));
+		}
+		return res;
+	}
+
+	private String[] join(String[] res, String[] cur) {
+		String [] joinRes = new String[res.length];
+		for(int i = 0; i < joinRes.length; i++) {
+			joinRes[i] = res[i] + cur[i];
+		}
+		return joinRes;
+	}
+
+	private String[] getPresentation(int shapeIndex, int offset) {
+		if (direction.equals(Directions.ROW)) {
+			shapes[shapeIndex].setHeight(getHeight());
 		} else {
-			res = rowPresentation(res, offset);
+			shapes[shapeIndex].setWidth(getWidth());
 		}
-
-		restoreNestedDirections(); // restore nested directions
-
-		return res;
-	}
-
-	private String[] rowPresentation(String[] source, int offset) {
-		String[] res = new String[getHeight()];
-		Arrays.fill(res, getOffset(offset));
-		for (int j=0; j<shapes.length-1;j++) {
-			shapes[j].setHeight(getHeight());
-			String[] shapePresentation = shapes[j].presentation(0);
-			for (int i = 0; i < shapePresentation.length; i++) {
-				res[i] += shapePresentation[i] + getOffset(margin);
-			}
-		}
-		// right border condition: without margin
-		shapes[shapes.length-1].setHeight(getHeight());
-		String[] shapePresentation = shapes[shapes.length-1].presentation(0);
-		for (int i = 0; i < shapePresentation.length; i++) {
-			res[i] += shapePresentation[i] ;
-		}
-		return res;
-	}
-
-	private String[] colPresentation(String[] source, int offset) {
-		String[] res = new String[0];
-		for (var i = 0; i<shapes.length-1; i++) {
-			res = colPresentationPerShape(res, shapes[i], offset);
-		}
-		// right border condition: without margin
-		int margintemp = margin;
-		margin = 0;
-		res = colPresentationPerShape(res, shapes[shapes.length-1], offset);
-		margin = margintemp;
-		return res;
-	}
-	private String[] colPresentationPerShape(String[] source, Shape shape, int offset) {
-		shape.setWidth(this.getWidth()); // this could be commented if there wasn't condition
-											// all shapes have the same width in vertical representation
-
-		var present = shape.presentation(offset);
-		String[] res = Arrays.copyOf(source, source.length + present.length + margin);
-		System.arraycopy(shape.presentation(offset), 0, res, source.length, present.length);
-
-		// add margin - margin here is a count of empty strings between shapes
-		String[] marginArray = new String[margin];
-		Arrays.fill(marginArray, "");
-		System.arraycopy(marginArray, 0, res, source.length + present.length, margin);
-		return res;
-	}
-
-	/**
-	 * make a snapshot of all directions of nested canvas
-	 */
-	private void storeNestesDirections(Shape[] shapes) {
-		for (var shape : shapes) {
-			if (shape instanceof Canvas) {
-				Directions curDirection = ((Canvas) shape).direction;
-				if (curDirection != directionOrig) {
-					addToSnapshot(shape.hashCode());
-				}
-				((Canvas) shape).storeNestesDirections(((Canvas) shape).shapes);
-			}
-		}
-	}
-
-	private void addToSnapshot(int number) {
-		int newlength = 1;
-		if (snapshot == null) {
-			snapshot = new int[] { 0 };
-		} else {
-			newlength = snapshot.length + 1;
-		}
-		snapshot = Arrays.copyOf(snapshot, newlength);
-		snapshot[newlength - 1] = number;
-	}
-
-	/**
-	 * restore directions
-	 */
-	private void restoreNestedDirections() {
-		if (snapshot !=null)
-		for (int i = 0; i < snapshot.length; i++) {
-			findDirections(shapes, snapshot[i]);
-		}
-	}
-
-	private void findDirections(Shape[] shapes, int hashcode) {
-		for (Shape shape : shapes) {
-			if (shape instanceof Canvas) {
-				if (shape.hashCode() == hashcode) {
-					((Canvas) shape).direction = directionOrig == Directions.COLUMN ? Directions.ROW
-							: Directions.COLUMN;
-					break;
-				}
-				findDirections(((Canvas) shape).shapes, hashcode);
-			}
-		}
-	}
-	/**
-	 * changes direction for all successors to the direction of the parent
-	 * @param shapes
-	 */
-	private void setNestedDirection(Shape[] shapes) {
-		for (var shape : shapes) {
-			if (shape instanceof Canvas) {
-				((Canvas) shape).setDirection(direction); // changing direction for successor
-				((Canvas) shape).setNestedDirection(((Canvas) shape).shapes); // processing for all sub-canvases
-
-			}
-		}
+		return shapes[shapeIndex].presentation(offset);
 	}
 
 	public void setDirection(Directions direction) {
 		this.direction = direction;
-
 	}
 
 	public void setMargin(int margin) {
 		this.margin = margin;
 	}
+
+	
+
 }
