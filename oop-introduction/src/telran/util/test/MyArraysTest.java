@@ -95,17 +95,29 @@ class MyArraysTest {
 		
 		assertArrayEquals(numbers, removeRepeated(numbersRepeatedValues));
 		assertArrayEquals(strings, removeRepeated(stringsRepeatedValues));
+		
+		// with nulls
+		Integer[] numbersRepeatedValuesNulls = { null, 13, 13, 2, -8, -8, 47, 100, 100, null, 100, 10, 7, 7 , 13};
+		String[] stringsRepeatedValuesNulls = { null, "abcd", "lmn", "zz", "fghwm", "abcd", "zz" };
+		
+		assertArrayEquals(new Integer[]{ null, 13, 2, -8, 47, 100, 10, 7 }, removeRepeated(numbersRepeatedValuesNulls));
+		assertArrayEquals(new String[] { null, "abcd", "lmn", "zz", "fghwm"}, removeRepeated(stringsRepeatedValuesNulls));
 	}
 	
 	@Test
 	void containsTest() {
+		Integer numbers[] = { null, 13, 2, -8, 47, 100, 10, 7 };
+		String[] strings = { null, "abcd", "lmn", "zz", "fghwm" };
+		
 		assertTrue(contains(numbers, 13));
 		assertTrue(contains(numbers, -8));
 		assertTrue(contains(numbers, 7));
+		assertTrue(contains(numbers, null));
 		
 		assertTrue(contains(strings, "abcd"));
 		assertTrue(contains(strings, "zz"));
 		assertTrue(contains(strings, "fghwm"));
+		assertTrue(contains(strings, null));
 		
 		assertFalse(contains(numbers, 1000));
 		assertFalse(contains(numbers, "-8"));
@@ -113,6 +125,7 @@ class MyArraysTest {
 		assertFalse(contains(strings, "-8"));
 		assertFalse(contains(strings, "abc"));
 		assertFalse(contains(strings, "abcde"));
+		
 	}
 	
 	int evenOddCompare(Integer o1, Integer o2){

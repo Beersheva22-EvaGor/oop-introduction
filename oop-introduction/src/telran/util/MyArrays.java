@@ -1,6 +1,5 @@
 package telran.util;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Predicate;
@@ -76,23 +75,26 @@ public class MyArrays {
 	public static <T> T[] removeRepeated(T[] array) {
 		T[] res = Arrays.copyOf(array, array.length);
 		int i = 0;
-		while (i < res.length - 1) {
-			// right part after element i without duplicates of element i
-			T[] right = removeEqualsToValue(Arrays.copyOfRange(res, i + 1, res.length), res[i]); 
-			int rightLength = right.length;
-			if (i + 1 + rightLength != res.length) {
-				res = Arrays.copyOf(res, i + 1 + rightLength);
-				System.arraycopy(right, 0, res, i + 1, rightLength);
-			}
+		while (i<res.length) {
+			T value = res[i];
+			res = removeIf(res, x -> compare(x, value));			
+			res = insertAtIndex(res, value, i);
 			i++;
-		}
+		}		
 		return res;
 	}
 
-	private static <T> T[] removeEqualsToValue(T[] array, T value) {
-		return removeIf(array, x -> x.equals(value));
+	private static <T> T[] insertAtIndex(T[] array, T value, int index) {
+		T res[] =  Arrays.copyOf(array, array.length+1);
+		res[index] = value;
+		System.arraycopy(array, index, res, index + 1, array.length - index);
+		return res;
 	}
 
+	/*
+	 * private static <T> T[] removeEqualsToValue(T[] array, T value) { return
+	 * removeIf(array, x -> x.equals(value)); }
+	 */
 	/**
 	 * returns true if element equaled to pattern exists in array
 	 */
@@ -100,8 +102,13 @@ public class MyArrays {
 		boolean res = false;
 		int i = 0;
 		while (!res && i < array.length) {
-			res = array[i++].equals(pattern);
+			res = compare(array[i], pattern);
+			i++;
 		}
 		return res;
+	}
+
+	private static <T> boolean compare(T element, T pattern) {
+		return element == null ? element == pattern : element.equals(pattern);
 	}
 }
