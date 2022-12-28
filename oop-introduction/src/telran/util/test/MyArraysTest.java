@@ -2,6 +2,7 @@ package telran.util.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.function.Predicate;
 
@@ -9,11 +10,15 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import telran.util.EvenOddComparator;
+import telran.util.MyArrays;
+
 import static telran.util.MyArrays.*;
 import telran.util.StringsLengthComparator;
 
 class MyArraysTest {
 
+	private static final int N_RUNS = 10000;
+	private static final int N_NUMBERS = 10000;
 	Integer numbers[] = { 13, 2, -8, 47, 100, 10, 7 };
 	String[] strings = { "abcd", "lmn", "zz", "fghwm" };
 
@@ -91,7 +96,7 @@ class MyArraysTest {
 	@Test
 	void removeRepeatedTest() {
 		Integer[] numbersRepeatedValues = { 13, 13, 2, -8, -8, 47, 100, 100, 100, 10, 7, 7 , 13};
-		String[] stringsRepeatedValues = { "abcd", "lmn", "zz", "fghwm", "abcd", "zz" };
+		String[] stringsRepeatedValues = { "abcd", "abcd", "lmn", "zz","zz", "fghwm", "abcd", "zz" };		
 		
 		assertArrayEquals(numbers, removeRepeated(numbersRepeatedValues));
 		assertArrayEquals(strings, removeRepeated(stringsRepeatedValues));
@@ -99,7 +104,7 @@ class MyArraysTest {
 		// with nulls
 		Integer[] numbersRepeatedValuesNulls = { null, 13, 13, 2, -8, -8, 47, 100, 100, null, 100, 10, 7, 7 , 13};
 		String[] stringsRepeatedValuesNulls = { null, "abcd", "lmn", "zz", "fghwm", "abcd", "zz" };
-		
+
 		assertArrayEquals(new Integer[]{ null, 13, 2, -8, 47, 100, 10, 7 }, removeRepeated(numbersRepeatedValuesNulls));
 		assertArrayEquals(new String[] { null, "abcd", "lmn", "zz", "fghwm"}, removeRepeated(stringsRepeatedValuesNulls));
 	}
@@ -124,10 +129,30 @@ class MyArraysTest {
 		
 		assertFalse(contains(strings, "-8"));
 		assertFalse(contains(strings, "abc"));
-		assertFalse(contains(strings, "abcde"));
-		
+		assertFalse(contains(strings, "abcde"));		
 	}
 	
+	@Test
+	void joinFunctionalTest() {
+		String expected = "13,2,-8,47,100,10,7";
+		assertEquals(expected,MyArrays.join(numbers, ",") );
+	}
+	
+	@Test
+	@Disabled
+	void joinPerformanceTest() {
+		Integer largeArray[]= getLargeNumbersArray();
+		for (int i = 0; i < N_RUNS; i++) {
+			MyArrays.join(largeArray, ",");
+		}
+	}
+	
+	private Integer[] getLargeNumbersArray() {
+		Integer[] res = new Integer[N_NUMBERS];
+		Arrays.fill(res, 1000);
+		return res;
+	}
+
 	int evenOddCompare(Integer o1, Integer o2){
 		int res = Math.abs(o1) % 2 - Math.abs(o2) % 2;
 	if (res == 0) {
