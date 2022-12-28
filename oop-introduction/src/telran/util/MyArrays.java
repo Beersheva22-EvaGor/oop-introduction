@@ -46,52 +46,32 @@ public class MyArrays{
 		return left < arraySorted.length && comp.compare(arraySorted[left], searchedValue) == 0 ? left : -left - 1;
 	}
 
-	public static <T> T[] filter(T[] array, Predicate<T> predicate) {
-		eraseParams(array);
-		int counPredicate = getCountPredicate(array, predicate);
-		T[] res = Arrays.copyOf(array, counPredicate);
-		eraseParams(array);
+	public static<T> T[] filter(T[] array, Predicate<T> predicate) {		
+		T[] res = Arrays.copyOf(array, array.length);
 		int index = 0;
-		for (T element : array) {
-			if (predicate.test(element)) {
+		for(T element: array) {
+			if(predicate.test(element)) {
 				res[index++] = element;
 			}
-		}
-		return res;
-	}
-
-	private static <T> void eraseParams(T[] array) {
-		helper = new Object[array.length];
-		index[0] = 0;
-	}
-
-	private static <T> int getCountPredicate(T[] array, Predicate<T> predicate) {
-		int res = 0;
-		for (T element : array) {
-			if (predicate.test(element)) {
-				res++;
-			}
-		}
-		return res;
+		}		
+		return Arrays.copyOf(res, index);
 	}
 
 	public static <T> T[] removeIf(T[] array, Predicate<T> predicate) {		
 		return filter(array, predicate.negate());
 	}
 
-	static Object helper[];
-	static int index[] = new int[1];
-	
 	public static <T> T[] removeRepeated(T[] array) {
-		return removeIf(array, el -> {
+		final Object helper[] = new Object[array.length];
+		final int index[] = {0};
+		return removeIf(array, element -> {
 			boolean res = true;
-			if (!contains(helper, el)) {
-				helper[index[0]++] = el;
+			if (!contains(helper, element)) {
+				helper[index[0]++] = element;
 				res = false;
 			}
 			return res;
 		});
-
 	}
 
 	/**
