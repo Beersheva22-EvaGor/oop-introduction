@@ -59,7 +59,7 @@ class CollectionsTest {
 		  // less 
 		  String someEl = "element 456"; list.add(someEl);
 		  list.add(someEl); String[] ar = {"1", "2", "3"}; 
-		  Object[] arObj = list.toArray(ar); 
+		  String[] arObj = list.toArray(ar); 
 		  assertEquals(list.size(), arObj.length);
 		  
 		  // same length 
@@ -69,8 +69,9 @@ class CollectionsTest {
 		  //greater 
 		  ar = new String[]{"1", "2","hjk", "$", "ghj", "ghjsd"}; 
 		  arObj = list.toArray(ar); 
-		  assertTrue(arObj[arObj.length-1]==null);
-		  assertTrue(arObj[arObj.length-2]==null); 
+		  
+		  assertNull(arObj[arObj.length-1]);
+		  assertNull(arObj[arObj.length-2]); 
 		  assertEquals(someEl, arObj[arObj.length-3]);
 		  
 		  // Specified array is null

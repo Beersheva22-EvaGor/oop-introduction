@@ -10,9 +10,8 @@ public class ArrayList<T> implements List<T> {
 	private T[] array;
 	private int size;
 
-
 	public ArrayList(int capacity) {
-		array = (T[])new Object[capacity];
+		array = (T[]) new Object[capacity];
 	}
 
 	public ArrayList() {
@@ -48,7 +47,7 @@ public class ArrayList<T> implements List<T> {
 	public boolean removeIf(Predicate<T> predicate) {
 		boolean res = false;
 		for (int i = 0; i < size; i++) {
-			if (predicate.test((T)array[i])) {
+			if (predicate.test((T) array[i])) {
 				remove(i);
 				res = true;
 			}
@@ -77,14 +76,13 @@ public class ArrayList<T> implements List<T> {
 	public T[] toArray(T[] ar) {
 		if (ar == null)
 			throw new NullPointerException("The specified array is null");
-
 		if (ar.length < size) {
-			ar = (T[]) new Object[size];
+			ar = (T[]) Arrays.copyOf(array, size, ar.getClass());
+		} else {
+			System.arraycopy(array, 0, ar, 0, size);
+			if (ar.length > size)
+				Arrays.fill(ar, size, ar.length, null);
 		}
-		System.arraycopy(array, 0, ar, 0, size);
-		if (ar.length > size)
-			Arrays.fill(ar, size, ar.length, null);
-
 		return ar;
 	}
 
@@ -140,7 +138,7 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public T get(int index) {
 		checkIndex(index, true);
-		return (T)array[index];
+		return (T) array[index];
 	}
 
 	@Override
