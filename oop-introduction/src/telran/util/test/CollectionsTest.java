@@ -1,87 +1,83 @@
 package telran.util.test;
 
-import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
-import java.util.function.Predicate;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import telran.util.ArrayList;
+import telran.util.*;
 
-class CollectionsTest {
-
-	@Test
-	void ArrayListTest() {		
-		  ArrayList<String> list = new ArrayList<String>();
-		  Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.get(0));
-		  Assertions.assertThrows(IndexOutOfBoundsException.class, () -> list.set(0, "1")); 
-		  assertTrue(list.isEmpty()); assertEquals(0, list.size());
-		  
-		  String el0 = "Element 0"; 
-		  list.add(el0); 
-		  assertEquals(el0, list.get(0));
-		  assertFalse(list.isEmpty()); 
-		  assertEquals(1, list.size());
-		  
-		  el0 = "element 0"; list.set(0, el0); assertEquals(el0, list.get(0));
-		  assertTrue(list.contains(el0)); assertFalse(list.contains("5321dfdlfjs"));
-		  
-		  String el1 = "element 1"; list.add(1, el1); assertEquals(el0, list.get(0));
-		  assertEquals(el1, list.get(1));
-		  
-		  Assertions.assertThrows(IndexOutOfBoundsException.class, () ->
-		  list.remove(list.size())); 
-		  list.remove(1); 
-		  assertEquals(1, list.size());
-		  
-		  String el2 = "element 2"; list.add(el1); 
-		  list.add(el2); 
-		  assertEquals(0,
-		  list.indexOf(el0)); 
-		  assertEquals(2, list.indexOf(el2));
-		  
-		  list.add(el1); list.add(el2); assertEquals(0, list.lastIndexOf(el0));
-		  assertEquals(3, list.lastIndexOf(el1)); assertEquals(4,
-		  list.lastIndexOf(el2));
-		  
-		  list.remove(el1); assertEquals(el2, list.get(1));
-		  
-		  Predicate<String> predSubstr = s -> s.contains(el2);
-		  list.removeIf(predSubstr); assertEquals(-1, list.indexOf(el2));
-		  
-		  // with nulls list.add(1, null); assertEquals(1, list.lastIndexOf(null));
-		  list.removeIf(el -> el==null); assertEquals(-1, list.indexOf(null));
-		  
-		  // toArray: 
-		  // less 
-		  String someEl = "element 456"; list.add(someEl);
-		  list.add(someEl); String[] ar = {"1", "2", "3"}; 
-		  String[] arObj = list.toArray(ar); 
-		  assertEquals(list.size(), arObj.length);
-		  
-		  // same length 
-		  ar = new String[]{"1", "2", "r", "$"};	  
-		  
-		  
-		  //greater 
-		  ar = new String[]{"1", "2","hjk", "$", "ghj", "ghjsd"}; 
-		  arObj = list.toArray(ar); 
-		  
-		  assertNull(arObj[arObj.length-1]);
-		  assertNull(arObj[arObj.length-2]); 
-		  assertEquals(someEl, arObj[arObj.length-3]);
-		  
-		  // Specified array is null
-		  Assertions.assertThrows(NullPointerException.class, () -> list.toArray(null));
-		  
-		  //Specified array is a ChildClass whereas listArray is a superClass
-		  ArrayList<Object> listObj = new ArrayList<>(); 
-		  listObj.add(el0); 
-		  arObj = list.toArray(ar);
-		 
+public abstract class CollectionsTest {
+	protected Integer [] numbers = {10, 100, -5, 134, 280, 120, 15};
+	protected Integer ar[] = new Integer[numbers.length + 100];
+	protected Collection<Integer> collection;
+	protected Integer [] empty = {};
+	@BeforeEach
+	void setUp() throws Exception {
+		
+		for(Integer num: numbers) {
+			collection.add(num);
+		}
 	}
 
+	abstract void testAdd();
+	abstract void testIterator();
+	
+
+	@Test
+	void testRemove() {
+		Integer [] expected = {10, 100, -5,  280, 120, 15};
+		assertTrue(collection.remove((Integer)134));
+		assertArrayEquals(expected, collection.toArray(empty));
+		assertFalse(collection.remove((Integer)134));
+	}
+
+	@Test
+	void testRemoveIf() {
+		Integer []expected = {-5, 15};
+		assertTrue(collection.removeIf(n -> n % 2 == 0));
+		assertArrayEquals(expected, collection.toArray(empty));
+		assertFalse(collection.removeIf(n -> n % 2 == 0));		
+		assertTrue(collection.removeIf(n -> true));
+		assertTrue(collection.isEmpty());
+		
+	}
+
+	@Test
+	void testIsEmpty() {
+		assertFalse(collection.isEmpty());
+		collection.removeIf(n -> true);
+		assertTrue(collection.isEmpty());
+	}
+
+	@Test
+	void testSize() {
+		assertEquals(numbers.length, collection.size());
+	}
+
+	@Test
+	void testContains() {
+		assertTrue(collection.contains(numbers[0]));
+		assertFalse(collection.contains(Integer.MIN_VALUE));
+	}
+
+	@Test
+	void testToArray() {
+		
+		Arrays.fill(ar, 10);
+		assertTrue(ar == collection.toArray(ar));
+		for(int i = 0; i < numbers.length; i++) {
+			assertEquals(ar[i], numbers[i]);
+		}
+		for(int i = numbers.length; i < ar.length; i++) {
+			assertNull(ar[i]);
+		}
+		
+	}
 }
