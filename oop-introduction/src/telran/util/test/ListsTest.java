@@ -95,9 +95,6 @@ public abstract class ListsTest extends CollectionsTest {
 	@Test
 	@Override
 	void testIterator() {
-		for (var n : numbers) {
-			list.add(n);
-		}
 		Iterator<Integer> iterator = list.iterator();
 		for (int i = 0; i < numbers.length; i++) {
 			if (iterator.hasNext()) {
