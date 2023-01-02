@@ -95,11 +95,10 @@ public abstract class ListsTest extends CollectionsTest {
 	@Test
 	@Override
 	void testIterator() {
-		ArrayList<Integer> listInt = new ArrayList<Integer>();
 		for (var n : numbers) {
-			listInt.add(n);
+			list.add(n);
 		}
-		Iterator<Integer> iterator = listInt.iterator();
+		Iterator<Integer> iterator = list.iterator();
 		for (int i = 0; i < numbers.length; i++) {
 			if (iterator.hasNext()) {
 				assertEquals(numbers[i], iterator.next());
