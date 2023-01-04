@@ -166,25 +166,39 @@ public class LinkedList<T> implements List<T> {
 	}
 
 	private T removeCurrentNode(Node<T> nodeCurrent) {
-		Node<T> nodePrev = nodeCurrent.prev;
-		Node<T> nodeNext = nodeCurrent.next;
-		if (nodePrev != null && nodeNext != null) {
-			nodePrev.next = nodeCurrent.next;
-			nodeNext.prev = nodeCurrent.prev;
-		} else if (size>1){
-			if (nodePrev == null) {
-				head = nodeCurrent.next;
-				head.prev = null;
-			}
-			if (nodeNext == null) {
-				tail = nodeCurrent.prev;
-				tail.next = null;
-			}
-		} else {
+		if (size == 1) {
 			head = tail = null;
+		} else {
+			if (nodeCurrent.prev != null && nodeCurrent.next != null) {
+				removeMiddle(nodeCurrent);
+			} else {
+				if (nodeCurrent.prev == null) {
+					removeLeft(nodeCurrent);
+				}
+				if (nodeCurrent.next == null) {
+					removeRightt(nodeCurrent);
+				}
+			}
 		}
 		size--;
 		return nodeCurrent.obj;
+	}
+
+	private void removeMiddle(Node<T> nodeCurrent) {
+		Node<T> nodePrev = nodeCurrent.prev;
+		Node<T> nodeNext = nodeCurrent.next;
+		nodePrev.next = nodeCurrent.next;
+		nodeNext.prev = nodeCurrent.prev;
+	}
+
+	private void removeLeft(Node<T> nodeCurrent) {
+		head = nodeCurrent.next;
+		head.prev = null;
+	}
+
+	private void removeRightt(Node<T> nodeCurrent) {
+		tail = nodeCurrent.prev;
+		tail.next = null;
 	}
 
 	@Override
