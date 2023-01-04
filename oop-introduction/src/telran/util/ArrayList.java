@@ -7,68 +7,40 @@ import java.util.function.Predicate;
 
 public class ArrayList<T> implements List<T> {
 	static final int DEFAULT_CAPACITY = 16;
-	private T[] array ;
-	private int size;
-
-	private class ArrayListIterator implements Iterator<T> {
-		int iterator=-1;
-
-		@Override
-		public boolean hasNext() {
-			return nextIndex() < size;
-		}
-
-		@Override
-		public T next() {
-			if (!hasNext()) {
-				throw new NoSuchElementException();
-			}
-			return array[++iterator];
-		}
+private T [] array;
+private int size;
+private class ArrayListIterator implements Iterator<T> {
+int current = 0;
+	@Override
+	public boolean hasNext() {
 		
-		public int nextIndex() {
-			return iterator+1;
-		}
+		return current < size;
 	}
 
 	@Override
-	public boolean removeIf(Predicate<T> predicate) {
-		ArrayListIterator iter = new ArrayListIterator();
-		for (int i = 0; i < size; i++) {
-			if (!predicate.test(array[i])) {
-				iter.next();
-				array[iter.nextIndex()-1] = array[i];
-			}
+	public T next() {
+		if(!hasNext()) {
+			throw new NoSuchElementException();
 		}
-		int newSize = iter.nextIndex();
-		while (iter.hasNext()) {
-			iter.next();
-			array[iter.nextIndex()-1] = null;
-		}
-		boolean res = size> newSize;
-		size = newSize;
-		return res;
+		return array[current++];
 	}
 	
-
-	@SuppressWarnings("unchecked")
-	public ArrayList(int capacity) {
-		array = (T[]) new Object[capacity];
-	}
-
-	public ArrayList() {
-		this(DEFAULT_CAPACITY);
-	}
-
+}
+@SuppressWarnings("unchecked")
+public ArrayList(int capacity) {
+	array = (T[])new Object[capacity];
+}
+public ArrayList() {
+	this(DEFAULT_CAPACITY);
+}
 	@Override
 	public boolean add(T element) {
-		if (size == array.length) {
+		if(size == array.length) {
 			reallocate();
 		}
 		array[size++] = element;
 		return true;
 	}
-
 	private void reallocate() {
 		array = Arrays.copyOf(array, array.length * 2);
 	}
@@ -85,25 +57,38 @@ public class ArrayList<T> implements List<T> {
 	}
 
 	@Override
+	public boolean removeIf(Predicate<T> predicate) {
+		int oldSize = size;
+		int tIndex = 0;
+		for (int i = 0; i < oldSize; i++) {
+			if (predicate.test(array[i])) {
+				size--;
+			} else {
+				array[tIndex++] = array[i];
+			}
+		}
+		Arrays.fill(array, size, oldSize, null);
+		return oldSize > size;
+		
+	}
+
+	@Override
 	public boolean isEmpty() {
+		
 		return size == 0;
 	}
 
 	@Override
 	public int size() {
-
+		
 		return size;
 	}
 
-	@Override
-	public boolean contains(T pattern) {
-
-		return indexOf(pattern) > -1;
-	}
+	
 
 	@Override
 	public T[] toArray(T[] ar) {
-		if (ar.length < size) {
+		if(ar.length < size) {
 			ar = Arrays.copyOf(array, size);
 		}
 		System.arraycopy(array, 0, ar, 0, size);
@@ -136,21 +121,20 @@ public class ArrayList<T> implements List<T> {
 	@Override
 	public int indexOf(T pattern) {
 		int index = 0;
-		while (index < size && !isEqual(array[index], pattern)) {
+		while(index < size && !isEqual(array[index], pattern)) {
 			index++;
 		}
 		return index < size ? index : -1;
 	}
 
 	private boolean isEqual(T element, T pattern) {
-
-		return element == null ? element == pattern : element.equals(pattern);
+		
+		return element == null  ? element == pattern : element.equals(pattern);
 	}
-
 	@Override
 	public int lastIndexOf(T pattern) {
 		int index = size - 1;
-		while (index >= 0 && !isEqual(array[index], pattern)) {
+		while(index >= 0 && !isEqual(array[index], pattern)) {
 			index--;
 		}
 		return index;
@@ -162,24 +146,16 @@ public class ArrayList<T> implements List<T> {
 		return array[index];
 	}
 
-	private void checkIndex(int index, boolean sizeIncluded) {
-		int sizeDelta = sizeIncluded ? 0 : 1;
-		if (index < 0 || index > size - sizeDelta) {
-			throw new IndexOutOfBoundsException(index);
-		}
-
-	}
-
+	
 	@Override
 	public void set(int index, T element) {
 		checkIndex(index, false);
 		array[index] = element;
 
 	}
-
 	@Override
 	public Iterator<T> iterator() {
-
+		
 		return new ArrayListIterator();
 	}
 

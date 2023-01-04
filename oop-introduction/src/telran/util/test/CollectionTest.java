@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import telran.util.*;
 
-public abstract class CollectionsTest {
+public abstract class CollectionTest {
 	protected Integer [] numbers = {10, 100, -5, 134, 280, 120, 15};
 	protected Integer ar[] = new Integer[numbers.length + 100];
 	protected Collection<Integer> collection;
@@ -43,7 +43,7 @@ public abstract class CollectionsTest {
 		Integer []expected = {-5, 15};
 		assertTrue(collection.removeIf(n -> n % 2 == 0));
 		assertArrayEquals(expected, collection.toArray(empty));
-		assertFalse(collection.removeIf(n -> n % 2 == 0));		
+		assertFalse(collection.removeIf(n -> n % 2 == 0));
 		assertTrue(collection.removeIf(n -> true));
 		assertTrue(collection.isEmpty());
 		
@@ -80,4 +80,5 @@ public abstract class CollectionsTest {
 		}
 		
 	}
+
 }
