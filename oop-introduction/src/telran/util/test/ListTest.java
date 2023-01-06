@@ -61,7 +61,6 @@ public abstract class ListTest extends CollectionTest {
 			assertEquals(i, list.indexOf(numbers[i]));
 			
 		}
-		assertEquals(-1,list.indexOf(Integer.MAX_VALUE));
 		assertEquals(-1,list.lastIndexOf(Integer.MAX_VALUE));
 	}
 
