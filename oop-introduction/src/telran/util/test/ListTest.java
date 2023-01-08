@@ -20,7 +20,7 @@ public abstract class ListTest extends CollectionTest {
 
   @Test
   @Override
-  void testAdd() {
+  void testAdd() { 
 	  assertTrue(list.add(numbers[0]));
 	  assertEquals(numbers.length + 1, list.size());
   }

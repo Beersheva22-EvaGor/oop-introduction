@@ -19,14 +19,15 @@ default boolean removeIf(Predicate<T> predicate) {
 }
 
 default T[] toArray(T[] ar) {
-	if (ar.length < size()) {
-		ar = Arrays.copyOf(ar, size());
+	int size =  size();
+	if (ar.length < size) {
+		ar = Arrays.copyOf(ar, size);
 	}
 	Iterator<T> it = iterator();
-	for (int i = 0; i < size(); i++) {
+	for (int i = 0; i < size; i++) {
 		ar[i] = it.next();
 	}
-	Arrays.fill(ar, size(), ar.length, null);
+	Arrays.fill(ar, size, ar.length, null);
 	return ar;
 }
 

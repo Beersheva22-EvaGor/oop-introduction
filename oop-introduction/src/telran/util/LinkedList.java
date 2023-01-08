@@ -158,7 +158,7 @@ public class LinkedList<T> extends AbstractCollection<T> implements List<T> {
 			while (!res && hare.next != null && hare != null) {
 				turtoise = turtoise.next;
 				hare = hare.next.next;
-				if (turtoise.hashCode() == hare.hashCode()) {
+				if (turtoise== hare) {
 					res = true;
 				}
 			}
