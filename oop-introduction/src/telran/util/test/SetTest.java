@@ -1,0 +1,45 @@
+package telran.util.test;
+
+import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import telran.util.ArrayList;
+import telran.util.Set;
+
+public class SetTest extends CollectionTest {
+
+	Set<Integer> set ;
+	@BeforeEach
+	void setUp() throws Exception {
+		super.setUp();
+		set = (Set<Integer>) collection;
+	}
+
+	@Override
+	@Test
+	void testAdd() {
+		assertTrue(set.add(Integer.MAX_VALUE));
+		assertFalse(set.add(Integer.MAX_VALUE));
+	}
+
+	@Override
+	@Test
+	void testIterator() {
+		Iterator<Integer> it = set.iterator();
+		Integer[] actual = new Integer[numbers.length];
+		int i = 0;
+		while (it.hasNext()) {
+			actual[i++] = it.next();
+		}
+		Arrays.sort(numbers);
+		Arrays.sort(actual);
+		assertArrayEquals(numbers, actual);		
+	}
+
+}

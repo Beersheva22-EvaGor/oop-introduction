@@ -158,9 +158,7 @@ public class LinkedList<T> extends AbstractCollection<T> implements List<T> {
 			while (!res && hare.next != null && hare != null) {
 				turtoise = turtoise.next;
 				hare = hare.next.next;
-				if (turtoise== hare) {
-					res = true;
-				}
+				res = turtoise== hare;
 			}
 		}
 		return res;
@@ -192,27 +190,6 @@ public class LinkedList<T> extends AbstractCollection<T> implements List<T> {
 		}
 		return current;
 	}
-//
-//private Node<T> getNode(int index) {
-//		
-//		return index < size / 2 ? getNodeFromLeft(index) : getNodeFromRight(index);
-//	}
-//
-//	private Node<T> getNodeFromRight(int index) {
-//		Node<T> current = tail;
-//		for(int i = size - 1; i > index; i--) {
-//			current = current.prev;
-//		}
-//		return current;
-//	}
-//
-//	private Node<T> getNodeFromLeft(int index) {
-//		Node<T> current = head;
-//		for(int i = 0; i < index; i++) {
-//			current = current.next;
-//		}
-//		return current;
-//	}
 
 	private void addHead(T element) {
 		Node<T> node = new Node<>(element);
