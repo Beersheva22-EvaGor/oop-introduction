@@ -100,10 +100,7 @@ class MyArraysTest {
 		
 		assertArrayEquals(numbers, removeRepeated(numbersRepeatedValues));
 		assertArrayEquals(strings, removeRepeated(stringsRepeatedValues));
-		
-		// with nulls
-		Integer[] numbersRepeatedValuesNulls = { null, 13, 13, 2, -8, -8, 47, 100, 100, null, 100, 10, 7, 7 , 13};
-		String[] stringsRepeatedValuesNulls = { null, "abcd", "lmn", "zz", "fghwm", "abcd", "zz" };
+
 	}
 	
 	@Test

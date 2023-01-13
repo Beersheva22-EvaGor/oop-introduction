@@ -2,8 +2,6 @@ package telran.util.test;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import java.util.Iterator;
-
 import org.junit.jupiter.api.Test;
 
 import telran.util.*;

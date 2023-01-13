@@ -70,8 +70,7 @@ public abstract class CollectionTest {
 	}
 
 	@Test
-	void testToArray() {
-		
+	void testToArray() {		
 		Arrays.fill(ar, 10);
 		assertTrue(ar == collection.toArray(ar));
 		Arrays.sort(ar, 0, collection.size());
@@ -101,8 +100,7 @@ public abstract class CollectionTest {
 		}
 		assertTrue(collection.contains(num));
 		it1.remove();
-		assertFalse(collection.contains(num));
-		
+		assertFalse(collection.contains(num));	
 		
 	}
 
