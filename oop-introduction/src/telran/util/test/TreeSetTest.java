@@ -28,7 +28,6 @@ class TreeSetTest extends SetTest {
 			clone[i++] = it.next();			
 		}
 		Arrays.sort(numbers);
-		Arrays.sort(clone);
 		assertArrayEquals(numbers, clone);
 	}
 

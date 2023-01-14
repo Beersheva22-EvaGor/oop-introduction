@@ -19,32 +19,34 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 
 	private class TreeSetIterator<T> implements Iterator<T> {
 		Node<T> current;
-		int current_iter=0;
-		
-		public TreeSetIterator(){
-			current = findMin((Node<T>) root);
+
+		public TreeSetIterator() {
+			current = findMin((Node<T>)root);
 		}
-		
+
 		@Override
 		public boolean hasNext() {
-			return current_iter < size;
+			return current !=null;
 		}
 
 		@Override
 		public T next() {
 			if (!hasNext()) {
 				throw new NoSuchElementException();
-			}			
-			T res = current.obj;
-			if (current.right == null) {
-				current = current.parent;
-			} else {			
-				current = findMin(current.right);
 			}
-			current_iter++;
-			return res;
+			Node<T> res = current;
+			
+			if (current.right == null) {
+				while (current.parent !=null && current.parent.left == current) {
+					current = current.parent;
+				}
+				if (current == res) current = null;
+			} else {
+				current = findMin(current.right);
+			} 
+			return res.obj;
 		}
-		
+
 		private Node<T> findMin(Node<T> root) {
 			Node<T> current = root;
 			if (root != null) {
@@ -75,7 +77,8 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 			root = new Node<T>(element);
 			size++;
 		} else {
-			Node<T> current = root, parent;
+			Node<T> current = root;
+			Node<T> parent;
 			int compareResult;
 			do {
 				compareResult = comp.compare(element, current.obj);
@@ -83,7 +86,7 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 				if (compareResult == 0)
 					res = false;
 				else
-					current = choiceOfMoving(compareResult, current);
+					current = compareResult < 0 ? current.left : current.right;
 			} while (res && current != null);
 
 			if (res) {
@@ -97,15 +100,6 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 			}
 		}
 		return res;
-	}
-
-	private Node<T> choiceOfMoving(int comareResult, Node<T> current) {
-		if (comareResult < 0) {
-			current = current.left;
-		} else {
-			current = current.right;
-		}
-		return current;
 	}
 
 	@Override
@@ -123,7 +117,7 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 			if (compareResult == 0)
 				res = true;
 			else
-				current = choiceOfMoving(compareResult, current);
+				current = compareResult < 0 ? current.left : current.right;
 		}
 		return res;
 	}
@@ -134,5 +128,4 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 		return new TreeSetIterator<>();
 	}
 
-	
 }
