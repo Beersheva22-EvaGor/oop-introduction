@@ -44,5 +44,22 @@ class TreeSetTest extends SetTest {
 		super.testAdd();
 		assertFalse(collection.add(numbers[0]));
 	}
-
+	
+	@Test
+	void testAddition(){
+		numbers = new Integer[] {10, -50, 100, -70, -30, -100, -60, 30, 150};
+		collection = new TreeSet();
+		for (var el: numbers)
+			collection.add(el);
+			
+		Iterator<Integer> it = collection.iterator();
+		Integer[] clone = new Integer[numbers.length];
+		Arrays.fill(clone, null);
+		int i = 0;
+		while (it.hasNext()) {
+			clone[i++] = it.next();			
+		}
+		for (var el: clone)
+			System.out.print(el + " ");
+	}
 }

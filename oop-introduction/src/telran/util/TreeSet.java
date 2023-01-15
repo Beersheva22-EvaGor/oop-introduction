@@ -21,12 +21,12 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 		Node<T> current;
 
 		public TreeSetIterator() {
-			current = findMin((Node<T>)root);
+			current = findMin((Node<T>) root);
 		}
 
 		@Override
 		public boolean hasNext() {
-			return current !=null;
+			return current != null;
 		}
 
 		@Override
@@ -35,15 +35,17 @@ public class TreeSet<T> extends AbstractCollection<T> implements Set<T> {
 				throw new NoSuchElementException();
 			}
 			Node<T> res = current;
-			
+
 			if (current.right == null) {
-				while (current.parent !=null && current.parent.left == current) {
-					current = current.parent;
+				Node<T> parent = current.parent;
+				while (parent != null && parent.left != current) {
+					current = parent;
+					parent = parent.parent;
 				}
-				if (current == res) current = null;
+					current = parent;
 			} else {
 				current = findMin(current.right);
-			} 
+			}
 			return res.obj;
 		}
 
