@@ -20,7 +20,7 @@ public class LinearRecursion {
 		if (pow < 0) {
 			throw new IllegalArgumentException();
 		}
-		int res = base>0? base : -base;
+		int res = base > 0 ? base : -base;
 		if (pow == 0) {
 			res = 1;
 		} else {
@@ -83,4 +83,48 @@ public class LinearRecursion {
 		return ar;
 	}
 
+	public static boolean isSubstring(String string, String substr) {
+		boolean res = false;
+		char[] stringAr = new char[string.length()];
+		toArray(string, stringAr, string.length());
+		char[] substrAr = new char[substr.length()];
+		toArray(substr, substrAr, substr.length());
+
+		res = compare(stringAr, substrAr, 0);
+
+		return res;
+
+	}
+
+	private static char[] toArray(String string, char[] ar, int counter) {
+		if (counter > 0) {
+			ar[counter - 1] = string.charAt(counter - 1);
+			toArray(string, ar, --counter);
+		}
+		return ar;
+	}
+
+	public static boolean compare(char[] stringAr, char[] substrAr, int index) {
+		boolean res = false;
+		if (index < stringAr.length - substrAr.length +1 && !res) {
+			res = compareChars(stringAr, substrAr, index++, 0);
+			if (!res) {
+				res = compare(stringAr, substrAr, index);
+			}
+		}
+		return res;
+	}
+
+	private static boolean compareChars(char[] stringAr, char[] substrAr, int index, int indexChar) {
+		boolean res = true;
+		if (indexChar < substrAr.length) {
+			if (substrAr[indexChar] != stringAr[index + indexChar]) {
+				res = false;
+			}
+			if (res) {
+				compareChars(stringAr, substrAr, index, ++indexChar);
+			}
+		}
+		return res;
+	}
 }

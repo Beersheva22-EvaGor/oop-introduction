@@ -49,5 +49,25 @@ public class LinearRecursionTest {
 		assertEquals(25, square(5));
 		assertEquals(81, square(9));
 	}
+
+	@Test
+	void isSubstringTest() {
+		String string = "hello world";
+		String substr1 = "hello";
+		String substr2 = "world";
+		
+		assertTrue(isSubstring(string, substr1));
+		assertTrue(isSubstring(string, substr2));
+		
+		assertFalse(isSubstring(string, "no"));
+	}
 	
+	@Test
+	void compareTest() {
+		char[] stringAr = {'h', 'e', 'l', 'l', 'o'};
+		char[] substrAr = { 'e', 'l'};
+		
+		assertTrue(compare(stringAr, substrAr, 0));
+		assertFalse(compare(stringAr, new char[]{'b'}, 0));
+	}
 }
