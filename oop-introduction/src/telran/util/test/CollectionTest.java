@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -74,11 +75,12 @@ public abstract class CollectionTest {
 		Arrays.fill(ar, 10);
 		assertTrue(ar == collection.toArray(ar));
 		Arrays.sort(ar, 0, collection.size());
-		Arrays.sort(numbers);
-		for(int i = 0; i < numbers.length; i++) {
-			assertEquals(ar[i], numbers[i]);
+		Integer expected[] = Arrays.copyOf(numbers, numbers.length);
+		Arrays.sort(expected);
+		for(int i = 0; i < expected.length; i++) {
+			assertEquals(ar[i], expected[i]);
 		}
-		for(int i = numbers.length; i < ar.length; i++) {
+		for(int i = expected.length; i < ar.length; i++) {
 			assertNull(ar[i]);
 		}
 		
@@ -102,6 +104,14 @@ public abstract class CollectionTest {
 		it1.remove();
 		assertFalse(collection.contains(num));	
 		
+	}
+	@Test
+	void nextExceptionIteratorTest() {
+		Iterator<Integer> it = collection.iterator();
+		while (it.hasNext()) {
+			it.next();
+		}
+		assertThrowsExactly(NoSuchElementException.class, ()-> it.next());
 	}
 
 }

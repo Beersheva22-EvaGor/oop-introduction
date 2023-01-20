@@ -1,50 +1,47 @@
 package telran.util.test;
 
-import org.junit.jupiter.api.Test;
+
+
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import telran.util.*;
 
 class LinkedListTest extends ListTest{
+	LinkedList<Integer> linkedList;
 	@BeforeEach
 	@Override 
 	void setUp() throws Exception {
 		collection = new LinkedList<>();
 		super.setUp();
+		linkedList = (LinkedList<Integer>)list;
+	}
+	@Test
+	void isLoopTestEven() {
+		list.add(300);
+		assertFalse(linkedList.hasLoop());
+		linkedList.setNext(list.size() - 1, 0);
+		assertTrue(linkedList.hasLoop());
+		
+	}
+	@Test
+	void isLoopTestOdd() {
+		assertFalse(linkedList.hasLoop());
+		linkedList.setNext(list.size() - 1, 0);
+		assertTrue(linkedList.hasLoop());
+		
+	}
+	@Test
+	void isLoopNoOneNode() {
+		LinkedList<Integer> linkedList = new LinkedList<>();
+		assertFalse(linkedList.hasLoop());
+		linkedList.add(10);
+		assertFalse(linkedList.hasLoop());
+		linkedList.setNext(0, 0);
+		assertTrue(linkedList.hasLoop());
 	}
 	
-	@Test
-	void testLoopWrongIndexes() {
-		assertFalse(((LinkedList<Integer>)collection).hasLoop());
-		assertThrows(IllegalArgumentException.class, ()->((LinkedList<Integer>)collection).setNext(1, 2));
-	}
-
-	@Test
-	private void testLoopEmptyCollection() {
-		collection.removeIf(x-> true);
-		((LinkedList<Integer>)collection).setNext(collection.size(), 0);
-		assertFalse(((LinkedList<Integer>)collection).hasLoop());
-	}
-
-	@Test
-	private void testLoopBorders() {
-		((LinkedList<Integer>)collection).setNext(collection.size(), 0);
-		assertTrue(((LinkedList<Integer>)collection).hasLoop());
-	}
-
-	@Test
-	private void testLoopSameIndex() {
-		((LinkedList<Integer>)collection).setNext(2, 2);
-		assertTrue(((LinkedList<Integer>)collection).hasLoop());
-	}
-
-	@Test
-	private void testLoopDifferentIndexes() {
-		((LinkedList<Integer>)collection).setNext(3, 1);
-		assertTrue(((LinkedList<Integer>)collection).hasLoop());
-	}
 	
-
 }
