@@ -1,11 +1,8 @@
 package telran.recursion;
 
-import java.util.Arrays;
-
 public class LinearRecursion {
-
-	public static long factorial(int n) {
-		long res = 1;
+	static public long factorial(int n) {
+		long res = 0;
 		if (n < 0) {
 			res = factorial(-n);
 		} else if (n < 2) {
@@ -16,36 +13,33 @@ public class LinearRecursion {
 		return res;
 	}
 
-	public static int power(int base, int pow) {
-		if (pow < 0) {
+	static public int power(int a, int b) {
+		// code cannot use cycles and *, / operators
+		if (b < 0) {
 			throw new IllegalArgumentException();
 		}
-		int res = base > 0 ? base : -base;
-		if (pow == 0) {
-			res = 1;
-		} else {
-			res = powIntinsic(base, res, pow);
+		int res = 1;
+		if (b > 0) {
+			res = multiply(a, power(a, b - 1));
 		}
 		return res;
 	}
 
-	private static int multiplication(int base, int multiple) {
+	private static int multiply(int a, int b) {
+
 		int res = 0;
-		if (multiple-- > 0) {
-			res += base + multiplication(base, multiple);
+		if (b < 0) {
+			res = multiply(-a, -b);
 		}
+		if (b > 0) {
+			res = a + multiply(a, b - 1);
+		}
+
 		return res;
 	}
 
-	private static int powIntinsic(int base, int multiple, int pow) {
-		if (pow-- > 1) {
-			base = multiplication(base, multiple);
-			return powIntinsic(base, multiple, pow);
-		}
-		return base;
-	}
+	static public long sum(int ar[]) {
 
-	public static long sum(int[] ar) {
 		return sum(0, ar);
 	}
 
@@ -58,73 +52,65 @@ public class LinearRecursion {
 	}
 
 	public static long square(int x) {
+		// no cycles
+		// no * , / operators
+		// no additional functions
+		// no static fields
+		// (x-1)^2 = x^2 -2x + 1; => x^2 = (x-1)^2 + 2x -1
+		long res = 0;
 		if (x < 0) {
-			x = -x;
-		}
-		long res = x;
-		if (x > 0) {
-			res += --x + square(x);
+			res = square(-x);
+		} else if (x > 0) {
+			res = x + x - 1 + square(x - 1);
 		}
 		return res;
 	}
 
-	public static int[] reverse(int[] ar) {
-		int[] res = Arrays.copyOf(ar, ar.length);
-		return swap(res, 0);
+	public static void reverse(int ar[]) {
+		// no cycles
+		// no static fields
+		// reversing elements of the source array
+		reverse(0, ar.length - 1, ar);
 	}
 
-	private static int[] swap(int[] ar, int i) {
-		int temp = ar[i];
-		ar[i] = ar[ar.length - i - 1];
-		ar[ar.length - i - 1] = temp;
-		if (i < (ar.length - 1) / 2) {
-			swap(ar, ++i);
+	private static void reverse(int firstIndex, int lastIndex, int[] ar) {
+		if (firstIndex < lastIndex) {
+			swap(ar, firstIndex, lastIndex);
+			reverse(firstIndex + 1, lastIndex - 1, ar);
 		}
-		return ar;
+
 	}
 
-	public static boolean isSubstring(String string, String substr) {
+	private static void swap(int[] ar, int firstIndex, int lastIndex) {
+		int tmp = ar[firstIndex];
+		ar[firstIndex] = ar[lastIndex];
+		ar[lastIndex] = tmp;
+
+	}
+
+	public static boolean isSubstring(String str, String substr) {
+		// returns true if a given 'substr' is indeed the substring of a given
+		// 'string'.
+		// Challenges: 1. To apply only following methods of the class String:
+		// charAt(int ind); String substring(int ind); int length();
+		// 2. No cycles;
 		boolean res = false;
-		char[] stringAr = new char[string.length()];
-		toArray(string, stringAr, string.length());
-		char[] substrAr = new char[substr.length()];
-		toArray(substr, substrAr, substr.length());
-
-		res = compare(stringAr, substrAr, 0);
+		if (str.length() >= substr.length()) {
+			res = isEqual(str, substr) ? true : isSubstring(str.substring(1), substr);
+		} 
 
 		return res;
 
 	}
 
-	private static char[] toArray(String string, char[] ar, int counter) {
-		if (counter > 0) {
-			ar[counter - 1] = string.charAt(counter - 1);
-			toArray(string, ar, --counter);
-		}
-		return ar;
-	}
-
-	public static boolean compare(char[] stringAr, char[] substrAr, int index) {
+	private static boolean isEqual(String str, String substr) {
 		boolean res = false;
-		if (index < stringAr.length - substrAr.length +1 && !res) {
-			res = compareChars(stringAr, substrAr, index++, 0);
-			if (!res) {
-				res = compare(stringAr, substrAr, index);
-			}
+		if (substr.length() == 0) {
+			res = true;
+		} else if (str.charAt(0) == substr.charAt(0)) {
+			res = isEqual(str.substring(1), substr.substring(1));
 		}
-		return res;
-	}
-
-	private static boolean compareChars(char[] stringAr, char[] substrAr, int index, int indexChar) {
-		boolean res = true;
-		if (indexChar < substrAr.length) {
-			if (substrAr[indexChar] != stringAr[index + indexChar]) {
-				res = false;
-			}
-			if (res) {
-				compareChars(stringAr, substrAr, index, ++indexChar);
-			}
-		}
+		
 		return res;
 	}
 }

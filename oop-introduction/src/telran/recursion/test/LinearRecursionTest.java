@@ -33,12 +33,12 @@ public class LinearRecursionTest {
 	void reverseTest() {
 		int ar[] = { 1, 2, 3, 4, 5, 6 };
 		int expected[] = { 6, 5, 4, 3, 2, 1 };
-		ar = reverse(ar);
+		reverse(ar);
 		assertArrayEquals(expected, ar);
 
 		int ar1[] = { 1, 2, 3, 4, 5, 6, 7};
 		int expected1[] = {7, 6, 5, 4, 3, 2, 1 };
-		ar1 = reverse(ar1);
+		reverse(ar1);
 		assertArrayEquals(expected1, ar1);
 	}
 	
@@ -59,15 +59,6 @@ public class LinearRecursionTest {
 		assertTrue(isSubstring(string, substr1));
 		assertTrue(isSubstring(string, substr2));
 		
-		assertFalse(isSubstring(string, "no"));
-	}
-	
-	@Test
-	void compareTest() {
-		char[] stringAr = {'h', 'e', 'l', 'l', 'o'};
-		char[] substrAr = { 'e', 'l'};
-		
-		assertTrue(compare(stringAr, substrAr, 0));
-		assertFalse(compare(stringAr, new char[]{'b'}, 0));
+		assertFalse(isSubstring(string, "hrllo"));
 	}
 }
