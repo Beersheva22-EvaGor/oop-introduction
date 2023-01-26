@@ -3,9 +3,12 @@ package telran.util.test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.stream.IntStream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import telran.util.Sorted;
 import telran.util.TreeSet;
 
 public class TreeSetTest extends SortedTest {
@@ -21,6 +24,7 @@ public class TreeSetTest extends SortedTest {
 	}
 	@Test
 	void displayRotatatedTest() {
+		System.out.println("*********UNBALANCED TREE**************");
 		tree.displayTreeRotated();
 	}
 	@Test
@@ -44,4 +48,26 @@ public class TreeSetTest extends SortedTest {
 		assertArrayEquals(expected, actual);
 		assertTrue(tree.contains(280));
 	}
+	@Override
+	protected Sorted<Integer> getSortedCollection() {
+		return new TreeSet<Integer>();
+	}
+	
+	@Test
+	void balanceTest() {
+		tree.balance();
+		assertEquals(3, tree.height());
+		assertEquals(4, tree.width());
+		System.out.println("***********BALANCED TREE**************");
+		tree.displayTreeRotated();
+	}
+	
+//	@Test
+//	void performanceTestSortedAddingWithBalance() {
+//		TreeSet<Integer> sorted = new TreeSet<Integer>();		
+//		IntStream.range(0, N_ELEMENTS).forEach(i -> sorted.add(i));
+//		sorted.balance();
+//		runPerformanceTest(sorted);
+//	}
+	
 }

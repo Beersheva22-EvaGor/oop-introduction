@@ -22,4 +22,6 @@ public abstract class SetTest extends CollectionTest {
 		assertFalse(set.add(Integer.MAX_VALUE));
 
 	}	
+	
+	
 }
