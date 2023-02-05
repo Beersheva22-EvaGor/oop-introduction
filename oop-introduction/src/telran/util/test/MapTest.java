@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import telran.util.HashMap;
 import telran.util.Map;
 import telran.util.Map.Entry;
 import telran.util.Set;
@@ -16,9 +15,9 @@ abstract class MapTest {
 
 	@BeforeEach
 	void setUp() throws Exception {
-		map.put(1, "One");
 		map.put(2, "Two");
 		map.put(3, "Three");
+		map.put(1, "One");
 	}
 
 	@Test

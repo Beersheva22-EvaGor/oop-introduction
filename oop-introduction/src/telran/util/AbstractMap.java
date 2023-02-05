@@ -1,5 +1,7 @@
 package telran.util;
 
+import java.lang.reflect.InvocationTargetException;
+
 public abstract class AbstractMap<K, V> implements Map<K, V> {
 
 	protected Set<Entry<K, V>> set;
@@ -46,7 +48,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 
 	@Override
 	public boolean containsKey(K key) {
-		return set.stream().anyMatch(el -> el.getKey().equals(key));		
+		return set.contains(new Entry(key, null));
 	}
 
 	@Override
@@ -56,14 +58,12 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 
 	@Override
 	public Collection<V> values() {
-		try {
-			Collection<V> res = set.getClass().getConstructor().newInstance();
-			set.forEach(el -> res.add(el.getValue()));
+
+			Collection<V> res = new ArrayList<V>();
+			entrySet().forEach(el -> res.add(el.getValue()));
 			return res;
-		} catch (Exception e) {
-			throw new IllegalStateException();
-		} 
 	}
+
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -83,7 +83,8 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 	public Set<Entry<K, V>> entrySet() {
 		try {
 			Set<Entry<K, V>> res = set.getClass().getConstructor().newInstance();
-			return set == null ? res : set;
+			set.forEach(el -> res.add(el));
+			return res;
 		} catch (Exception e) {
 			throw new IllegalStateException();
 		}
@@ -94,7 +95,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 	public V remove(K key) {
 		V res = get(key);
 		if (res !=null) {
-		 set.removeIf(el -> el.getKey() ==key);
+		 set.remove(new Entry(key, null));
 		}
 		return res;
 	}
