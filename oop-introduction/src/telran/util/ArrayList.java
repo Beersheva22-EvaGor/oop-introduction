@@ -132,7 +132,6 @@ public class ArrayList<T> extends AbstractCollection<T> implements List<T> {
 
 	@Override
 	public Iterator<T> iterator() {
-
 		return new ArrayListIterator();
 	}
 

@@ -83,7 +83,7 @@ public abstract class AbstractMap<K, V> implements Map<K, V> {
 	public Set<Entry<K, V>> entrySet() {
 		try {
 			Set<Entry<K, V>> res = set.getClass().getConstructor().newInstance();
-			set.forEach(el -> res.add(el));
+			set.forEach(res::add);
 			return res;
 		} catch (Exception e) {
 			throw new IllegalStateException();
