@@ -1,41 +1,43 @@
 package telran.util;
 
 import java.util.Iterator;
+
 import telran.util.LinkedList.Node;
 
 public class LinkedHashSet<T> extends AbstractCollection<T> implements Set<T> {
-
-	private class LinkedList4Hash<T> extends LinkedList<T> {
+	private LinkedList<T> list = new LinkedList<>();
+	private HashMap<T, Node<T>> map = new HashMap<>();
+	
+	private class LinkedHashSetIterator implements Iterator<T> {
+		Iterator<T> listIterator = list.iterator();
+		T currentObj = null;
 		@Override
-		void removeNode(Node<T> current) {
-			super.removeNode(current);
-			removeObj(current.obj);
+		public boolean hasNext() {
+			
+			return listIterator.hasNext();
+		}
 
+		@Override
+		public T next() {
+			currentObj = listIterator.next();
+			return currentObj;
+		}
+		@Override
+		public void remove() {
+			listIterator.remove();
+			map.remove(currentObj);
+			size--;
 		}
 	}
-
-	@SuppressWarnings("unchecked")
-	private void removeObj(Object obj) {
-		hashMap.remove((T) obj);
-		size--;
-	}
-
-	LinkedList4Hash<T> list;
-	Map<T, Node<T>> hashMap;
-
+	
 	@Override
 	public boolean add(T element) {
 		boolean res = false;
-		if (size == 0) {
-			list = new LinkedList4Hash<>();
-			hashMap = new HashMap<T, LinkedList.Node<T>>();
-		}
-
-		if (!hashMap.containsKey(element)) {
-			list.add(element);
-			hashMap.put(element, list.tail);
-			size++;
+		if (!map.containsKey(element)) {
 			res = true;
+			list.add(element);
+			map.put(element, list.tail);
+			size++;
 		}
 		return res;
 	}
@@ -43,27 +45,33 @@ public class LinkedHashSet<T> extends AbstractCollection<T> implements Set<T> {
 	@Override
 	public boolean remove(T pattern) {
 		boolean res = false;
-		if (hashMap.containsKey(pattern)) {
-			Node<T> node = hashMap.remove(pattern);
-			list.removeNode(node);
+		Node<T> node = map.get(pattern);
+		if (node != null) {
 			res = true;
+			list.removeNode(node);
+			map.remove(pattern);
+			size--;
+			
 		}
 		return res;
 	}
 
 	@Override
 	public boolean contains(T pattern) {
-		return hashMap.containsKey(pattern);
+		
+		return map.containsKey(pattern);
 	}
 
 	@Override
 	public Iterator<T> iterator() {
-		return list.iterator();
+		
+		return new LinkedHashSetIterator();
 	}
 
 	@Override
 	public T get(T pattern) {
-		return hashMap.get(pattern).obj;
+		Node<T> node = map.get(pattern);
+		return node == null ? null : node.obj;
 	}
 
 }
